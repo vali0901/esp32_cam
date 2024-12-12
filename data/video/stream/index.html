@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP32-CAM Control Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #222; color: white; margin: 0; padding: 0; }
+        button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        img { width: 100%; height: auto; max-width: 640px; margin: 20px auto; display: block; }
+    </style>
+</head>
+<body>
+    <h1>ESP32-CAM Control Panel</h1>
+    <button id="toggle-flashlight">Toggle Flashlight</button>
+    <button id="toggle-stream">Toggle Stream</button>
+    <img id="video-stream" src="/stream/video_feed" alt="Video Stream">
+
+    <script>
+        const toggleFlashlightBtn = document.getElementById("toggle-flashlight");
+        const toggleStreamBtn = document.getElementById("toggle-stream");
+        const videoStream = document.getElementById("video-stream");
+
+        toggleFlashlightBtn.addEventListener("click", () => {
+            fetch("/stream/flashlight", { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    alert(`Flashlight is now ${data.flashlight ? "ON" : "OFF"}`);
+                });
+        });
+
+        toggleStreamBtn.addEventListener("click", () => {
+            fetch("/stream/toggle_stream", { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    alert(`Streaming is now ${data.streaming ? "ON" : "OFF"}`);
+                    videoStream.style.display = data.streaming ? "block" : "none";
+                });
+        });
+    </script>
+</body>
+</html>
